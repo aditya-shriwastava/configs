@@ -13,4 +13,5 @@
  set hlsearch
  set ai
  
-set wildmenu
+ set wildmenu
+ set hidden

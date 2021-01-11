@@ -1,5 +1,6 @@
 alias python='/usr/bin/python3'
 alias dpush='git add .;git commit -m "X";git push;git status'
+alias fopen='xdg-open'
 
 # usage:
 # alarm <description> <minutes>
