@@ -17,6 +17,27 @@ function runcpp(){
   fi
 }
 
+function runkl(){
+  if [ "$1" == "--help" ]; then
+    echo "Usage: runkl <path to kotlin file>"
+    return
+  fi
+  echo "####################################################"
+  echo "Compilation Starts"
+  echo "####################################################"
+  file=$1
+  file="$( cut -d '.' -f 1 <<< "${file}" )"
+  kotlinc ${file}.kt -nowarn -include-runtime -d ${file}.jar
+  echo "####################################################"
+  echo "Execution Starts"
+  echo "####################################################"
+  if [[ $? -eq 0 ]]
+  then
+    java -jar ${file}.jar
+    rm ./${file}.jar
+  fi
+}
+
 function reminder() {
   if [ "$1" == "--help" ]; then
     echo "Usage: reminder <Task> <Duration in minutes>"
@@ -90,6 +111,7 @@ function rx(){
     destination_file="${destination_file_index}.jpg"
     mv "${source_file}" ${destination_file}
     echo "${source_file} ---> ${destination_file}"
+    sudo chown ${USER} ${destination_file}
     destination_file_index=$(expr ${destination_file_index} + 1)
   done
 }
