@@ -1,0 +1,6 @@
+[alias]
+	tree = log --all --decorate --oneline --graph
+[core]
+	editor = vim
+[credential]
+	helper = store
