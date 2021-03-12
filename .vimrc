@@ -1,5 +1,7 @@
  colorscheme morning
 
+ set clipboard=unnamedplus
+
  " Plugins Start
  call plug#begin()
  Plug 'dpelle/vim-LanguageTool'
@@ -7,7 +9,6 @@
  Plug 'plasticboy/vim-markdown' 
  Plug 'tpope/vim-surround'
  Plug 'tpope/vim-commentary'
- Plug 'christoomey/vim-system-copy'
  Plug 'ctrlpvim/ctrlp.vim'
  call plug#end()
 
@@ -24,7 +25,6 @@
  set tabstop=2
  set shiftwidth=2
  set expandtab
- set colorcolumn=80
 
 " Turn on syntax highlighting.
  syntax on
