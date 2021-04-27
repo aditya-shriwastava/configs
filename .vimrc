@@ -10,6 +10,7 @@
  Plug 'tpope/vim-surround'
  Plug 'tpope/vim-commentary'
  Plug 'ctrlpvim/ctrlp.vim'
+ Plug 'udalov/kotlin-vim'
  call plug#end()
 
  let g:languagetool_jar='/opt/LanguageTool-5.2/languagetool-commandline.jar'
