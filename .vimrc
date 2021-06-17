@@ -1,7 +1,5 @@
  colorscheme morning
 
- set clipboard=unnamedplus
-
  " Plugins Start
  call plug#begin()
  Plug 'dpelle/vim-LanguageTool'
@@ -43,3 +41,7 @@
  
  set wildmenu
  set hidden
+
+" copy and paste
+ vmap <C-C> "+y
+ vmap <C-V> "+p
