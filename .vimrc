@@ -4,11 +4,11 @@
  call plug#begin()
  Plug 'dpelle/vim-LanguageTool'
  Plug 'godlygeek/tabular' 
- Plug 'plasticboy/vim-markdown' 
  Plug 'tpope/vim-surround'
  Plug 'tpope/vim-commentary'
  Plug 'ctrlpvim/ctrlp.vim'
  Plug 'udalov/kotlin-vim'
+ Plug 'SidOfc/mkdx'
  call plug#end()
 
  let g:languagetool_jar='/opt/LanguageTool-5.2/languagetool-commandline.jar'
@@ -20,19 +20,9 @@
  set conceallevel=2
  let g:vim_markdown_conceal = 2
  " Plugins End
- 
- set tabstop=2
- set shiftwidth=2
- set expandtab
 
 " Turn on syntax highlighting.
  syntax on
-
-" Show line numbers.
- set number
- set ruler
- set relativenumber
- set ai
 
  set hlsearch
  hi Search cterm=NONE ctermfg=black ctermbg=cyan
@@ -45,3 +35,19 @@
 " copy and paste
  vmap <C-C> "+y
  vmap <C-V> "+p
+
+let g:mkdx#settings     = { 'highlight': { 'enable': 1 },
+                        \ 'enter': { 'shift': 1 },
+                        \ 'links': { 'external': { 'enable': 1 } },
+                        \ 'toc': { 'text': 'Table of Contents', 'update_on_write': 1 },
+                        \ 'fold': { 'enable': 1 } }
+let g:polyglot_disabled = ['markdown'] " for vim-polyglot users, it loads Plasticboy's markdown
+                                       " plugin which unfortunately interferes with mkdx list indentation. 
+ set number
+ set relativenumber
+ set ruler
+ set ai
+ set tabstop=4
+ set softtabstop=4
+ set shiftwidth=4
+ set expandtab
