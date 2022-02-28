@@ -1,4 +1,7 @@
 #!/bin/bash
+# Install dependencies
+# sudo apt install sox 
+# sudo apt-get install libsox-fmt-mp3
 function reminder() {
   if [ "$1" == "--help" ]; then
     echo "Usage: reminder <Task> <Duration in minutes>"

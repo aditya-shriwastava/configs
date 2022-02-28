@@ -4,3 +4,6 @@
 	editor = vim
 [credential]
 	helper = store
+[user]
+	email = adityashriwastava7@gmail.com
+	name = Aditya Shriwastava
