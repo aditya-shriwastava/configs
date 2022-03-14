@@ -9,6 +9,7 @@
  Plug 'ctrlpvim/ctrlp.vim'
  Plug 'udalov/kotlin-vim'
  Plug 'SidOfc/mkdx'
+ Plug 'francoiscabrol/ranger.vim'
  call plug#end()
 
  let g:languagetool_jar='/opt/LanguageTool-5.2/languagetool-commandline.jar'
