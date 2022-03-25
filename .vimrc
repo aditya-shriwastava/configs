@@ -34,6 +34,7 @@
  set hidden
 
 " copy and paste
+" Note: Install vim-gtk for x11 clipboard
  vmap <C-C> "+y
  vmap <C-V> "+p
 
@@ -52,3 +53,4 @@ let g:polyglot_disabled = ['markdown'] " for vim-polyglot users, it loads Plasti
  set softtabstop=4
  set shiftwidth=4
  set expandtab
+ set mouse=a
