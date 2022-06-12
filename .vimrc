@@ -54,3 +54,21 @@ let g:polyglot_disabled = ['markdown'] " for vim-polyglot users, it loads Plasti
  set shiftwidth=4
  set expandtab
  set mouse=a
+
+ nnoremap <silent> <C-y> :CtrlPBuffer<CR>
+
+ set splitbelow splitright
+
+" Make adjusing split sizes a bit more friendly
+noremap <silent> <C-Left> :vertical resize +3<CR>
+noremap <silent> <C-Right> :vertical resize -3<CR>
+noremap <silent> <C-Up> :resize +3<CR>
+noremap <silent> <C-Down> :resize -3<CR>
+
+if &term =~ '^screen'
+    " tmux will send xterm-style keys when its xterm-keys option is on
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+    execute "set <xRight>=\e[1;*C"
+    execute "set <xLeft>=\e[1;*D"
+endif
