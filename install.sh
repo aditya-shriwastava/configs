@@ -37,3 +37,5 @@ apt-get install neofetch
 apt-get install htop
 apt-get install nmap
 apt-get install trash-cli
+
+source ~/.bashrc
