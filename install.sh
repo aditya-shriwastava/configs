@@ -14,7 +14,6 @@ sudo apt-get --assume-yes install git
 cp ./.gitconfig ~
 
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
-cat ~/.ssh/id_rsa.pub | xclip -selection clipboard
 
 sudo apt-get --assume-yes install vim
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
@@ -42,3 +41,4 @@ sudo apt-get --assume-yes install nmap
 sudo apt-get --assume-yes install trash-cli
 
 source ~/.bashrc
+cat ~/.ssh/id_rsa.pub
