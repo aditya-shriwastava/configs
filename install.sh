@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "$(whoami)"
+[ "$UID" -eq 0 ] || exec sudo "$0" "$@"
+
 sudo apt-get --assume-yes update
 
 sudo apt-get --assume-yes install xclip
