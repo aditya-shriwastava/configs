@@ -49,5 +49,4 @@ apt-get --assume-yes install htop
 apt-get --assume-yes install nmap
 apt-get --assume-yes install trash-cli
 
-eval "$(cat /home/$user/.bashrc | tail -n +10)"
 cat /home/$user/.ssh/id_rsa.pub
