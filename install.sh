@@ -19,22 +19,22 @@ echo 'cpfile(){
 }' >> /home/$user/.bashrc
 
 apt-get --assume-yes install git
-cp ./.gitconfig ~
+cp ./.gitconfig /home/$user
 cat ./ps1.txt >> /home/$user/.bashrc
 
-ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+ssh-keygen -t rsa -N "" -f /home/$user/.ssh/id_rsa
 
 apt-get --assume-yes install vim
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-cp ./.vimrc ~
+cp ./.vimrc /home/$user
 vim +PlugInstall +qall
 
 echo 'set -o vi
 bind -m vi-insert "\C-l":clear-screen' >> /home/$user/.bashrc
 
 apt-get --assume-yes install tmux
-cp ./.tmux.conf ~
+cp ./.tmux.conf /home/$user
 
 apt-get --assume-yes install ranger
 echo "source /usr/share/doc/fzf/examples/key-bindings.bash" >> /home/$user/.bashrc
