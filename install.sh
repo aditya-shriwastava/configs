@@ -12,12 +12,7 @@ echo 'cpfile(){
 
 sudo apt-get --assume-yes install git
 cp ./.gitconfig ~
-echo 'git_branch() {
-  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
-}
-PS1='[${PWD/*\//}]$(git_branch)>>'
-PS1="\[\e[0;32m\]$PS1\[\e[m\]"
-export PS1' >> ~/.bashrc
+cat ./ps1.txt >> ~/.bashrc
 
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
 
