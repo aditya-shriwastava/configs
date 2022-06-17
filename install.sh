@@ -45,8 +45,10 @@ echo "export FZF_DEFAULT_COMMAND='find .'" >> /home/$user/.bashrc
 echo 'export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"' >> /home/$user/.bashrc
 
 apt-get --assume-yes install neofetch
+snap install cpufetch
 apt-get --assume-yes install htop
 apt-get --assume-yes install nmap
 apt-get --assume-yes install trash-cli
+apt-get --assume-yes install ncdu
 
 cat /home/$user/.ssh/id_rsa.pub
