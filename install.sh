@@ -22,7 +22,7 @@ apt-get --assume-yes install git
 cp ./.gitconfig /home/$user
 cat ./ps1.txt >> /home/$user/.bashrc
 
-ssh-keygen -t rsa -N "" -f /home/$user/.ssh/id_rsa
+sudo -u $user ssh-keygen -t rsa -N "" -f /home/$user/.ssh/id_rsa
 
 apt-get --assume-yes install vim
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
