@@ -114,7 +114,6 @@ nmap <silent> gd <Plug>(coc-definition)
 let g:vimwiki_list = [{'path': '~/Documents/Notes',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 
-nmap // :BLines!<CR>
 nmap /b :Lines!<CR>
 nmap /p :Rg!<CR>
 
