@@ -2,6 +2,7 @@ colorscheme pyte
 
 " Plugins Start
 call plug#begin()
+Plug 'SidOfc/mkdx'
 Plug 'dpelle/vim-LanguageTool'
 Plug 'godlygeek/tabular' 
 Plug 'tpope/vim-commentary'
@@ -30,22 +31,27 @@ Plug 'preservim/tagbar'
 Plug 'preservim/vim-markdown'
 Plug 'vimwiki/vimwiki'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install()  }, 'for': ['markdown', 'vim-plug'] }
-" Plug 'SidOfc/mkdx'
 Plug 'rhysd/vim-grammarous'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'lervag/vimtex'
+Plug 'uarun/vim-protobuf'
+Plug 'junegunn/vim-emoji'
 call plug#end()
+" Plugins End
 
 set encoding=UTF-8
 
 let g:languagetool_jar='/opt/LanguageTool-5.2/languagetool-commandline.jar'
 set spelllang=en_us
 
-let g:vim_markdown_folding_disabled = 1
-set conceallevel=2
-let g:vim_markdown_conceal = 2
-" Plugins End
+set conceallevel=1
+let g:vim_markdown_conceal = 1
 
 let g:tex_conceal = ""
 let g:vim_markdown_math = 1
+
+let g:vim_markdown_folding_disabled = 1
 
 " Turn on syntax highlighting.
 syntax on
@@ -136,6 +142,14 @@ set hlsearch
 hi Search cterm=none ctermfg=black ctermbg=yellow
 hi MatchParen cterm=none ctermbg=white ctermfg=cyan
 hi Pmenu ctermfg=blue ctermbg=white
+hi Visual ctermfg=blue ctermbg=white
 set incsearch
 
 set pastetoggle=<F5>
+
+nnoremap <S-Up> :m-2<CR>
+nnoremap <S-Down> :m+<CR>
+inoremap <S-Up> <Esc>:m-2<CR>
+inoremap <S-Down> <Esc>:m+<CR>
+
+let g:UltiSnipsEditSplit="vertical"
