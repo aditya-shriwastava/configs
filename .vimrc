@@ -2,20 +2,12 @@ colorscheme pyte
 
 " Plugins Start
 call plug#begin()
-Plug 'SidOfc/mkdx'
 Plug 'dpelle/vim-LanguageTool'
 Plug 'godlygeek/tabular' 
 Plug 'tpope/vim-commentary'
 Plug 'udalov/kotlin-vim'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'dkarter/bullets.vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'ryanoasis/vim-devicons'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'PhilRunninger/nerdtree-buffer-ops'
-Plug 'taketwo/vim-ros'
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
@@ -24,19 +16,16 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-repeat'
 Plug 'kshenoy/vim-signature'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'mhinz/vim-signify'
 Plug 'preservim/tagbar'
 Plug 'preservim/vim-markdown'
 Plug 'vimwiki/vimwiki'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install()  }, 'for': ['markdown', 'vim-plug'] }
-Plug 'rhysd/vim-grammarous'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'lervag/vimtex'
 Plug 'uarun/vim-protobuf'
-Plug 'junegunn/vim-emoji'
+Plug 'ycm-core/YouCompleteMe'
 call plug#end()
 " Plugins End
 
@@ -64,13 +53,6 @@ set hidden
 vmap <C-C> "+y
 vmap <C-V> "+p
 
-let g:mkdx#settings     = { 'highlight': { 'enable': 1 },
-                        \ 'enter': { 'shift': 1 },
-                        \ 'links': { 'external': { 'enable': 1 } },
-                        \ 'toc': { 'text': 'Table of Contents', 'update_on_write': 1 },
-                        \ 'fold': { 'enable': 1 } }
-let g:polyglot_disabled = ['markdown'] " for vim-polyglot users, it loads Plasticboy's markdown
-                                       " plugin which unfortunately interferes with mkdx list indentation. 
 set number
 set relativenumber
 set ruler
@@ -82,6 +64,9 @@ set expandtab
 set mouse=a
 
 set splitbelow splitright
+
+set incsearch
+set hlsearch
 
 " Make adjusing split sizes a bit more friendly
 noremap <silent> <C-Left> :vertical resize +3<CR>
@@ -103,20 +88,6 @@ function! CheckBackspace() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-inoremap <silent><expr> <Tab>
-      \ coc#pum#visible() ? coc#pum#next(1) :
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
-
-noremap <expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
-inoremap <expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<S-Tab>"
-
-inoremap <leader>g <Esc>:NERDTreeToggle<cr>
-nnoremap <leader>g <Esc>:NERDTreeToggle<cr>
-
-nmap <silent> gd <Plug>(coc-definition)
-
-
 let g:vimwiki_list = [{'path': '~/Documents/Notes',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 
@@ -129,20 +100,13 @@ map <C-p> :Files<CR>
 map <C-b> :Buffers<CR>
 map <C-n> :Windows<CR>
 
-" let g:airline#extensions#tabline#enabled = 1
-highlight clear SignColumn
-
-map <leader>c :TagbarToggle<CR>
-
-let g:vimwiki_markdown_link_ext = 1
-
-let g:airline_theme='deus'
-
 set hlsearch
-hi Search cterm=none ctermfg=black ctermbg=yellow
-hi MatchParen cterm=none ctermbg=white ctermfg=cyan
+hi Search cterm=none ctermfg=black ctermbg=cyan
+hi MatchParen cterm=none ctermbg=black ctermfg=cyan
 hi Pmenu ctermfg=blue ctermbg=white
 hi Visual ctermfg=blue ctermbg=white
+hi Error ctermfg=white ctermbg=red
+hi YcmErrorLine ctermbg=black ctermfg=red
 set incsearch
 
 set pastetoggle=<F5>
@@ -153,3 +117,12 @@ inoremap <S-Up> <Esc>:m-2<CR>
 inoremap <S-Down> <Esc>:m+<CR>
 
 let g:UltiSnipsEditSplit="vertical"
+
+" Let clangd fully control code completion
+let g:ycm_clangd_uses_ycmd_caching = 0
+" Use installed clangd, not YCM-bundled clangd which doesn't get updates.
+let g:ycm_clangd_binary_path = exepath("clangd")
+
+nmap <leader>yfw <Plug>(YCMFindSymbolInWorkspace)
+nmap <leader>yfd <Plug>(YCMFindSymbolInDocument)
+nnoremap <leader>jd :YcmCompleter GoTo<CR>
