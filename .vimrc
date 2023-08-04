@@ -25,6 +25,7 @@ Plug 'honza/vim-snippets'
 Plug 'lervag/vimtex'
 Plug 'uarun/vim-protobuf'
 Plug 'ycm-core/YouCompleteMe'
+Plug 'itchyny/lightline.vim'
 call plug#end()
 " Plugins End
 
@@ -102,6 +103,7 @@ hi MatchParen cterm=none ctermbg=black ctermfg=cyan
 hi Pmenu ctermfg=blue ctermbg=white
 hi Visual ctermfg=blue ctermbg=white
 hi Error ctermfg=white ctermbg=red
+hi YcmErrorLine ctermbg=black ctermfg=red
 set incsearch
 
 set pastetoggle=<F5>
@@ -112,3 +114,16 @@ inoremap <S-Up> <Esc>:m-2<CR>
 inoremap <S-Down> <Esc>:m+<CR>
 
 let g:UltiSnipsEditSplit="vertical"
+
+" Tab
+nnoremap <Tab> gt
+nnoremap <S-Tab> gT
+map <Leader>t :tabnew<CR>
+
+" ycm
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_clangd_uses_ycmd_caching = 0
+let g:ycm_clangd_binary_path = exepath("clangd")
+nmap <leader>yfw <Plug>(YCMFindSymbolInWorkspace)
+nmap <leader>yfd <Plug>(YCMFindSymbolInDocument)
+nnoremap <leader>jd :YcmCompleter GoTo<CR>
