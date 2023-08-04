@@ -19,7 +19,6 @@ Plug 'kshenoy/vim-signature'
 Plug 'mhinz/vim-signify'
 Plug 'preservim/tagbar'
 Plug 'preservim/vim-markdown'
-Plug 'vimwiki/vimwiki'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install()  }, 'for': ['markdown', 'vim-plug'] }
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -88,9 +87,6 @@ function! CheckBackspace() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-let g:vimwiki_list = [{'path': '~/Documents/Notes',
-                      \ 'syntax': 'markdown', 'ext': '.md'}]
-
 nmap /b :Lines!<CR>
 nmap /p :Rg!<CR>
 
@@ -106,7 +102,6 @@ hi MatchParen cterm=none ctermbg=black ctermfg=cyan
 hi Pmenu ctermfg=blue ctermbg=white
 hi Visual ctermfg=blue ctermbg=white
 hi Error ctermfg=white ctermbg=red
-hi YcmErrorLine ctermbg=black ctermfg=red
 set incsearch
 
 set pastetoggle=<F5>
@@ -117,12 +112,3 @@ inoremap <S-Up> <Esc>:m-2<CR>
 inoremap <S-Down> <Esc>:m+<CR>
 
 let g:UltiSnipsEditSplit="vertical"
-
-" Let clangd fully control code completion
-let g:ycm_clangd_uses_ycmd_caching = 0
-" Use installed clangd, not YCM-bundled clangd which doesn't get updates.
-let g:ycm_clangd_binary_path = exepath("clangd")
-
-nmap <leader>yfw <Plug>(YCMFindSymbolInWorkspace)
-nmap <leader>yfd <Plug>(YCMFindSymbolInDocument)
-nnoremap <leader>jd :YcmCompleter GoTo<CR>
