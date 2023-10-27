@@ -26,6 +26,7 @@ Plug 'lervag/vimtex'
 Plug 'uarun/vim-protobuf'
 Plug 'ycm-core/YouCompleteMe'
 Plug 'itchyny/lightline.vim'
+Plug 'chrisbra/unicode.vim'
 call plug#end()
 " Plugins End
 
