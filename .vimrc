@@ -27,6 +27,7 @@ Plug 'uarun/vim-protobuf'
 Plug 'ycm-core/YouCompleteMe'
 Plug 'itchyny/lightline.vim'
 Plug 'chrisbra/unicode.vim'
+Plug 'rust-lang/rust.vim'
 call plug#end()
 " Plugins End
 
@@ -35,7 +36,7 @@ set encoding=UTF-8
 let g:languagetool_jar='/opt/LanguageTool-5.2/languagetool-commandline.jar'
 set spelllang=en_us
 
-set conceallevel=1
+set conceallevel=0
 let g:vim_markdown_conceal = 1
 
 let g:tex_conceal = ""
@@ -128,3 +129,5 @@ let g:ycm_clangd_binary_path = exepath("clangd")
 nmap <leader>yfw <Plug>(YCMFindSymbolInWorkspace)
 nmap <leader>yfd <Plug>(YCMFindSymbolInDocument)
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
+
+map <leader>D :put =strftime('%d-%m-%Y')<CR>
