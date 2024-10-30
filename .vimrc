@@ -24,10 +24,12 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'lervag/vimtex'
 Plug 'uarun/vim-protobuf'
-Plug 'ycm-core/YouCompleteMe'
 Plug 'itchyny/lightline.vim'
 Plug 'chrisbra/unicode.vim'
 Plug 'rust-lang/rust.vim'
+Plug 'cstrahan/vim-capnp'
+Plug 'andreshazard/vim-logreview'
+Plug 'vim-scripts/scons.vim'
 call plug#end()
 " Plugins End
 
@@ -121,13 +123,3 @@ let g:UltiSnipsEditSplit="vertical"
 nnoremap <Tab> gt
 nnoremap <S-Tab> gT
 map <Leader>t :tabnew<CR>
-
-" ycm
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_clangd_uses_ycmd_caching = 0
-let g:ycm_clangd_binary_path = exepath("clangd")
-nmap <leader>yfw <Plug>(YCMFindSymbolInWorkspace)
-nmap <leader>yfd <Plug>(YCMFindSymbolInDocument)
-nnoremap <leader>jd :YcmCompleter GoTo<CR>
-
-map <leader>D :put =strftime('%d-%m-%Y')<CR>
