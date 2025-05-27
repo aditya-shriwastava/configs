@@ -26,8 +26,8 @@ for file in "${CONFIG_FILES[@]}"; do
     if [ -f "$CONFIG_DIR/$file" ]; then
         # Handle .bashrc, .tmux.conf, and gitconfig to correct home locations
         if [ "$file" = ".bashrc" ]; then
-            cp "$CONFIG_DIR/.bashrc" "$HOME/.bashrc"
-            echo "Installed .bashrc to $HOME/.bashrc"
+            cat "$CONFIG_DIR/.bashrc" >> "$HOME/.bashrc"
+            echo "Appended .bashrc content to $HOME/.bashrc"
         elif [ "$file" = ".tmux.conf" ]; then
             cp "$CONFIG_DIR/.tmux.conf" "$HOME/.tmux.conf"
             echo "Installed .tmux.conf to $HOME/.tmux.conf"
@@ -94,7 +94,7 @@ full_package_list="build-essential cmake clang \
     python3 python3-dev python-is-python3 python3-pip python3-venv lsb-release"
 
 echo
-read -p "Do you want to install the full recommended package suite (dev tools, desktop, VNC, utilities, Python, etc.)? [y/N]: " install_all
+read -p "Do you want to install the full recommended package suite (dev tools, utilities, Python, etc.)? [y/N]: " install_all
 if [[ "$install_all" =~ ^[Yy]$ ]]; then
     if command -v apt >/dev/null 2>&1; then
         sudo apt update
