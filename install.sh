@@ -26,8 +26,13 @@ for file in "${CONFIG_FILES[@]}"; do
     if [ -f "$CONFIG_DIR/$file" ]; then
         # Handle .bashrc, .tmux.conf, and gitconfig to correct home locations
         if [ "$file" = ".bashrc" ]; then
-            cat "$CONFIG_DIR/.bashrc" >> "$HOME/.bashrc"
-            echo "Appended .bashrc content to $HOME/.bashrc"
+            SOURCE_LINE="source $CONFIG_DIR/.bashrc"
+            if ! grep -Fxq "$SOURCE_LINE" "$HOME/.bashrc"; then
+                echo "$SOURCE_LINE" >> "$HOME/.bashrc"
+                echo "Added source line for .bashrc from configs to $HOME/.bashrc"
+            else
+                echo "Source line for .bashrc from configs already present in $HOME/.bashrc"
+            fi
         elif [ "$file" = ".tmux.conf" ]; then
             cp "$CONFIG_DIR/.tmux.conf" "$HOME/.tmux.conf"
             echo "Installed .tmux.conf to $HOME/.tmux.conf"
