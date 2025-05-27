@@ -1,7 +1,7 @@
 [alias]
 	tree = log --all --decorate --oneline --graph
 [core]
-	editor = vim
+	editor = nvim
 [credential]
 	helper = store
 [user]

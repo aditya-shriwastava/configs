@@ -1,12 +1,8 @@
-#!/bin/bash
-alias dpush='git add .;git commit -m "Updates";git push;git status'
 alias fopen='xdg-open'
 alias t='tmux'
-alias v='vim'
+alias v='nvim'
 alias r='ranger'
 alias p='python3'
-alias f='fuck'
-alias d='ddgr'
 
 git_branch() {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
