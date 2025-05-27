@@ -106,4 +106,11 @@ else
     echo "Skipping full package suite installation."
 fi
 
+# Install custom fzf key bindings if present
+if [ -f "$CONFIG_DIR/fzf.bash" ]; then
+    echo "Copying fzf.bash to /usr/share/doc/fzf/examples/key-bindings.bash (requires sudo)"
+    sudo cp "$CONFIG_DIR/fzf.bash" /usr/share/doc/fzf/examples/key-bindings.bash
+    echo "fzf.bash installed as key-bindings.bash"
+fi
+
 echo "Installation complete!"
