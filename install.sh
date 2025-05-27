@@ -3,67 +3,73 @@
 set -e
 
 CONFIG_DIR="$(cd "$(dirname "$0")" && pwd)"
-BACKUP_DIR="$HOME/configs_backup_$(date +%Y%m%d_%H%M%S)"
-
-# List of config files to install
 CONFIG_FILES=(.tmux.conf .bashrc .gitconfig)
 
-# Function to backup existing dotfiles
-backup_file() {
+# -----------------------------
+# Function: Install config file
+# -----------------------------
+install_config_file() {
     local file="$1"
-    if [ -f "$HOME/$file" ]; then
-        mkdir -p "$BACKUP_DIR"
-        cp "$HOME/$file" "$BACKUP_DIR/"
-        echo "Backed up $file to $BACKUP_DIR/"
-    fi
-}
-
-echo "Installing configs from $CONFIG_DIR"
-
-# Backup and copy config files
-for file in "${CONFIG_FILES[@]}"; do
-    backup_file "$file"
-    if [ -f "$CONFIG_DIR/$file" ]; then
-        # Handle .bashrc, .tmux.conf, and gitconfig to correct home locations
-        if [ "$file" = ".bashrc" ]; then
-            SOURCE_LINE="source $CONFIG_DIR/.bashrc"
+    case "$file" in
+        .bashrc)
+            local SOURCE_LINE="source $CONFIG_DIR/.bashrc"
             if ! grep -Fxq "$SOURCE_LINE" "$HOME/.bashrc"; then
                 echo "$SOURCE_LINE" >> "$HOME/.bashrc"
                 echo "Added source line for .bashrc from configs to $HOME/.bashrc"
             else
                 echo "Source line for .bashrc from configs already present in $HOME/.bashrc"
             fi
-        elif [ "$file" = ".tmux.conf" ]; then
+            ;;
+        .tmux.conf)
             cp "$CONFIG_DIR/.tmux.conf" "$HOME/.tmux.conf"
             echo "Installed .tmux.conf to $HOME/.tmux.conf"
-        elif [ "$file" = ".gitconfig" ]; then
+            ;;
+        .gitconfig)
             cp "$CONFIG_DIR/.gitconfig" "$HOME/.gitconfig"
             echo "Installed .gitconfig to $HOME/.gitconfig"
-        else
+            ;;
+        *)
             cp "$CONFIG_DIR/$file" "$HOME/$file"
             echo "Installed $file to $HOME/$file"
-        fi
-    fi
-    # Special handling for init.vim (for Neovim)
-    # if [ "$file" = "init.vim" ]; then
-    #     mkdir -p "$HOME/.config/nvim"
-    #     cp "$CONFIG_DIR/init.vim" "$HOME/.config/nvim/init.vim"
-    #     echo "Installed init.vim to $HOME/.config/nvim/init.vim"
-    # fi
-    
-    # Create Vim directories if needed
-    if [ "$file" = "init.vim" ]; then
-        mkdir -p "$HOME/.vim/backup" "$HOME/.vim/undo" "$HOME/.vim/swap"
-        echo "Ensured Vim backup, undo, and swap directories exist"
-    fi
-    
-    # Create Neovim directories if needed
-    if [ "$file" = "init.vim" ]; then
-        mkdir -p "$HOME/.local/share/nvim/backup" "$HOME/.local/share/nvim/undo" "$HOME/.local/share/nvim/swap"
-        echo "Ensured Neovim backup, undo, and swap directories exist"
-    fi
+            ;;
+    esac
+}
 
-done
+# -------------------------------------
+# Function: Install Neovim init.vim
+# -------------------------------------
+install_neovim_init() {
+    if [ -f "$CONFIG_DIR/init.vim" ]; then
+        mkdir -p "$HOME/.config/nvim"
+        cp "$CONFIG_DIR/init.vim" "$HOME/.config/nvim/init.vim"
+        echo "Installed init.vim to $HOME/.config/nvim/init.vim"
+    fi
+}
+
+# -----------
+# Main Logic
+# -----------
+echo "Installing configs from $CONFIG_DIR"
+
+for file in "${CONFIG_FILES[@]}"; do
+    if [ -f "$CONFIG_DIR/$file" ]; then
+        install_config_file "$file"
+    fi
+ done
+
+install_neovim_init
+
+# ---------------------------------------
+# Function: Ensure Vim/Neovim directories
+# ---------------------------------------
+ensure_vim_dirs() {
+    mkdir -p "$HOME/.vim/backup" "$HOME/.vim/undo" "$HOME/.vim/swap"
+    echo "Ensured Vim backup, undo, and swap directories exist"
+    mkdir -p "$HOME/.local/share/nvim/backup" "$HOME/.local/share/nvim/undo" "$HOME/.local/share/nvim/swap"
+    echo "Ensured Neovim backup, undo, and swap directories exist"
+}
+
+ensure_vim_dirs
 
 # Optionally prompt to install dependencies
 deps=(tmux nvim ranger)
