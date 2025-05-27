@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -6,7 +6,7 @@ CONFIG_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACKUP_DIR="$HOME/configs_backup_$(date +%Y%m%d_%H%M%S)"
 
 # List of config files to install
-CONFIG_FILES=(.tmux.conf .bashrc init.vim .gitconfig)
+CONFIG_FILES=(.tmux.conf .bashrc .gitconfig)
 
 # Function to backup existing dotfiles
 backup_file() {
@@ -45,11 +45,11 @@ for file in "${CONFIG_FILES[@]}"; do
         fi
     fi
     # Special handling for init.vim (for Neovim)
-    if [ "$file" = "init.vim" ]; then
-        mkdir -p "$HOME/.config/nvim"
-        cp "$CONFIG_DIR/init.vim" "$HOME/.config/nvim/init.vim"
-        echo "Installed init.vim to $HOME/.config/nvim/init.vim"
-    fi
+    # if [ "$file" = "init.vim" ]; then
+    #     mkdir -p "$HOME/.config/nvim"
+    #     cp "$CONFIG_DIR/init.vim" "$HOME/.config/nvim/init.vim"
+    #     echo "Installed init.vim to $HOME/.config/nvim/init.vim"
+    # fi
     
     # Create Vim directories if needed
     if [ "$file" = "init.vim" ]; then
