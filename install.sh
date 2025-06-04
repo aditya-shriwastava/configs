@@ -72,7 +72,7 @@ ensure_vim_dirs() {
 ensure_vim_dirs
 
 # Optionally prompt to install dependencies
-deps=(tmux nvim ranger)
+deps=(tmux neovim ranger)
 missing=()
 for dep in "${deps[@]}"; do
     if ! command -v "$dep" >/dev/null 2>&1; then
