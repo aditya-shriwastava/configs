@@ -1,7 +1,25 @@
 #!/usr/bin/env bash
 
+# Default container name
+CONTAINER_NAME="ubuntu-dev"
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --name)
+            CONTAINER_NAME="$2"
+            shift 2
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: $0 [--name <container-name>]"
+            exit 1
+            ;;
+    esac
+done
+
 docker run -d \
-    --name ubuntu-dev \
+    --name "$CONTAINER_NAME" \
     --gpus all \
     --device /dev/dri \
     -e HOST_UID=$(id -u) \
