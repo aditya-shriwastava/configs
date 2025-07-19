@@ -3,7 +3,22 @@
 set -e
 
 CONFIG_DIR="$(cd "$(dirname "$0")" && pwd)"
-CONFIG_FILES=(.tmux.conf .bashrc .gitconfig)
+CONFIG_FILES=(.tmux.conf .bashrc .gitconfig .bash_profile)
+
+# Parse command line flags
+NON_INTERACTIVE=false
+SKIP_DOCKER=false
+
+for arg in "$@"; do
+    case $arg in
+        --non-interactive|-n)
+            NON_INTERACTIVE=true
+            ;;
+        --skip-docker)
+            SKIP_DOCKER=true
+            ;;
+    esac
+done
 
 # -----------------------------
 # Function: Install config file
@@ -27,6 +42,10 @@ install_config_file() {
         .gitconfig)
             cp "$CONFIG_DIR/.gitconfig" "$HOME/.gitconfig"
             echo "Installed .gitconfig to $HOME/.gitconfig"
+            ;;
+        .bash_profile)
+            cp "$CONFIG_DIR/.bash_profile" "$HOME/.bash_profile"
+            echo "Installed .bash_profile to $HOME/.bash_profile"
             ;;
         *)
             cp "$CONFIG_DIR/$file" "$HOME/$file"
@@ -72,7 +91,7 @@ ensure_vim_dirs() {
 ensure_vim_dirs
 
 # Optionally prompt to install dependencies
-deps=(tmux neovim ranger)
+deps=(tmux nvim ranger)  # Changed neovim to nvim
 missing=()
 for dep in "${deps[@]}"; do
     if ! command -v "$dep" >/dev/null 2>&1; then
@@ -82,18 +101,23 @@ done
 
 if [ ${#missing[@]} -gt 0 ]; then
     echo "The following tools are missing: ${missing[*]}"
-    read -p "Do you want to install them now? [y/N]: " answer
-    if [[ "$answer" =~ ^[Yy]$ ]]; then
-        if command -v apt >/dev/null 2>&1; then
-            sudo apt update
-            sudo apt install -y "${missing[@]}"
-        elif command -v pacman >/dev/null 2>&1; then
-            sudo pacman -Sy --noconfirm "${missing[@]}"
-        else
-            echo "Please install the missing dependencies manually: ${missing[*]}"
-        fi
+    if [ "$NON_INTERACTIVE" = true ]; then
+        # In non-interactive mode, skip since tools should be pre-installed
+        echo "Running in non-interactive mode, skipping dependency check."
     else
-        echo "Skipping dependency installation."
+        read -p "Do you want to install them now? [y/N]: " answer
+        if [[ "$answer" =~ ^[Yy]$ ]]; then
+            if command -v apt >/dev/null 2>&1; then
+                sudo apt update
+                sudo apt install -y "${missing[@]}"
+            elif command -v pacman >/dev/null 2>&1; then
+                sudo pacman -Sy --noconfirm "${missing[@]}"
+            else
+                echo "Please install the missing dependencies manually: ${missing[*]}"
+            fi
+        else
+            echo "Skipping dependency installation."
+        fi
     fi
 else
     echo "All dependencies are installed."
@@ -104,17 +128,32 @@ full_package_list="build-essential cmake clang \
     tmux ranger neofetch git git-lfs fzf net-tools htop wget curl zip unzip silversearcher-ag\
     python3 python3-dev python-is-python3 python3-pip python3-venv lsb-release"
 
-echo
-read -p "Do you want to install the full recommended package suite (dev tools, utilities, Python, etc.)? [y/N]: " install_all
-if [[ "$install_all" =~ ^[Yy]$ ]]; then
+if [ "$NON_INTERACTIVE" = true ]; then
+    echo "Installing full recommended package suite (non-interactive mode)..."
     if command -v apt >/dev/null 2>&1; then
-        sudo apt update
-        sudo apt install -y $full_package_list
+        if [ "$EUID" -eq 0 ]; then
+            apt update
+            apt install -y $full_package_list
+        else
+            sudo apt update
+            sudo apt install -y $full_package_list
+        fi
     else
-        echo "Automatic full package install only supported with apt. Please install manually if needed."
+        echo "Automatic full package install only supported with apt."
     fi
 else
-    echo "Skipping full package suite installation."
+    echo
+    read -p "Do you want to install the full recommended package suite (dev tools, utilities, Python, etc.)? [y/N]: " install_all
+    if [[ "$install_all" =~ ^[Yy]$ ]]; then
+        if command -v apt >/dev/null 2>&1; then
+            sudo apt update
+            sudo apt install -y $full_package_list
+        else
+            echo "Automatic full package install only supported with apt. Please install manually if needed."
+        fi
+    else
+        echo "Skipping full package suite installation."
+    fi
 fi
 
 # Install custom fzf key bindings based on Ubuntu version
@@ -164,11 +203,18 @@ else
 fi
 
 # Check and install Docker
-echo
-if ! command -v docker >/dev/null 2>&1; then
+if [ "$SKIP_DOCKER" = true ]; then
+    echo "Skipping Docker installation (--skip-docker flag set)."
+elif ! command -v docker >/dev/null 2>&1; then
     echo "Docker is not installed."
-    read -p "Do you want to install Docker? [y/N]: " install_docker
-    if [[ "$install_docker" =~ ^[Yy]$ ]]; then
+    if [ "$NON_INTERACTIVE" = true ]; then
+        echo "Skipping Docker installation in non-interactive mode."
+    else
+        if [ "$NON_INTERACTIVE" != true ]; then
+            echo
+        fi
+        read -p "Do you want to install Docker? [y/N]: " install_docker
+        if [[ "$install_docker" =~ ^[Yy]$ ]]; then
         if command -v apt >/dev/null 2>&1; then
             echo "Installing Docker..."
             # Install prerequisites
@@ -194,30 +240,37 @@ if ! command -v docker >/dev/null 2>&1; then
         else
             echo "Automatic Docker installation only supported with apt. Please install manually."
         fi
-    else
-        echo "Skipping Docker installation."
+        else
+            echo "Skipping Docker installation."
+        fi
     fi
-else
+elif [ "$SKIP_DOCKER" != true ]; then
     echo "Docker is already installed."
 fi
 
 # Check and install Docker Compose (standalone version)
-if ! command -v docker-compose >/dev/null 2>&1; then
+if [ "$SKIP_DOCKER" = true ]; then
+    echo "Skipping Docker Compose installation (--skip-docker flag set)."
+elif ! command -v docker-compose >/dev/null 2>&1; then
     # Check if docker compose (plugin) is available
     if docker compose version >/dev/null 2>&1; then
         echo "Docker Compose is available as a Docker plugin (docker compose)."
     else
         echo "Docker Compose (standalone) is not installed."
-        read -p "Do you want to install Docker Compose standalone? [y/N]: " install_compose
-        if [[ "$install_compose" =~ ^[Yy]$ ]]; then
+        if [ "$NON_INTERACTIVE" = true ]; then
+            echo "Skipping Docker Compose installation in non-interactive mode."
+        else
+            read -p "Do you want to install Docker Compose standalone? [y/N]: " install_compose
+            if [[ "$install_compose" =~ ^[Yy]$ ]]; then
             echo "Installing Docker Compose..."
             # Get the latest version
             COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
             sudo curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
             echo "Docker Compose ${COMPOSE_VERSION} installed successfully."
-        else
-            echo "Skipping Docker Compose installation."
+            else
+                echo "Skipping Docker Compose installation."
+            fi
         fi
     fi
 else
