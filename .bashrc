@@ -20,7 +20,7 @@ remote_indicator() {
 # Color: Green text with color reset at the end
 # Shows 🌐 icon if REMOTE=True
 PS1='$(remote_indicator)[${PWD/*\//}|\h]$(git_branch)>>'
-PS1="\[\e[0;32m\]$PS1\[\e[m\] "
+PS1="\[\e[0;32m\]$PS1\[\e[m\]"
 export PS1
 
 set -o vi
