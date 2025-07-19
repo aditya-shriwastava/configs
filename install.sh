@@ -101,7 +101,7 @@ fi
 
 # Optionally install full package suite
 full_package_list="build-essential cmake clang \
-    tmux ranger neofetch git fzf net-tools htop wget curl zip unzip silversearcher-ag\
+    tmux ranger neofetch git git-lfs fzf net-tools htop wget curl zip unzip silversearcher-ag\
     python3 python3-dev python-is-python3 python3-pip python3-venv lsb-release"
 
 echo
@@ -161,6 +161,67 @@ else
     else
         echo "Warning: No fzf configuration files found"
     fi
+fi
+
+# Check and install Docker
+echo
+if ! command -v docker >/dev/null 2>&1; then
+    echo "Docker is not installed."
+    read -p "Do you want to install Docker? [y/N]: " install_docker
+    if [[ "$install_docker" =~ ^[Yy]$ ]]; then
+        if command -v apt >/dev/null 2>&1; then
+            echo "Installing Docker..."
+            # Install prerequisites
+            sudo apt update
+            sudo apt install -y ca-certificates curl gnupg lsb-release
+            
+            # Add Docker's official GPG key
+            sudo mkdir -p /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            
+            # Set up the repository
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            
+            # Install Docker Engine
+            sudo apt update
+            sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            
+            # Add current user to docker group
+            sudo usermod -aG docker $USER
+            echo "Docker installed successfully. You may need to log out and back in for group changes to take effect."
+        else
+            echo "Automatic Docker installation only supported with apt. Please install manually."
+        fi
+    else
+        echo "Skipping Docker installation."
+    fi
+else
+    echo "Docker is already installed."
+fi
+
+# Check and install Docker Compose (standalone version)
+if ! command -v docker-compose >/dev/null 2>&1; then
+    # Check if docker compose (plugin) is available
+    if docker compose version >/dev/null 2>&1; then
+        echo "Docker Compose is available as a Docker plugin (docker compose)."
+    else
+        echo "Docker Compose (standalone) is not installed."
+        read -p "Do you want to install Docker Compose standalone? [y/N]: " install_compose
+        if [[ "$install_compose" =~ ^[Yy]$ ]]; then
+            echo "Installing Docker Compose..."
+            # Get the latest version
+            COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
+            sudo curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            echo "Docker Compose ${COMPOSE_VERSION} installed successfully."
+        else
+            echo "Skipping Docker Compose installation."
+        fi
+    fi
+else
+    echo "Docker Compose is already installed."
 fi
 
 echo "Installation complete!"
