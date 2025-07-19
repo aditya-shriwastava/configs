@@ -5,12 +5,39 @@ set -e
 CONFIG_DIR="$(cd "$(dirname "$0")" && pwd)"
 CONFIG_FILES=(.tmux.conf .bashrc .gitconfig .bash_profile)
 
+# Function to display help
+show_help() {
+    cat << EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Install development environment configuration files and tools.
+
+OPTIONS:
+    -h, --help              Show this help message and exit
+    -n, --non-interactive   Run in non-interactive mode (no prompts)
+    --skip-docker           Skip Docker installation
+
+DESCRIPTION:
+    This script installs:
+    - Configuration files (.bashrc, .tmux.conf, .gitconfig, .bash_profile)
+    - Neovim configuration (init.vim)
+    - Development tools (tmux, neovim, ranger, etc.)
+    - Optional: Full development package suite (build tools, fzf, htop, etc.)
+    - Optional: Docker and Docker Compose
+
+EOF
+}
+
 # Parse command line flags
 NON_INTERACTIVE=false
 SKIP_DOCKER=false
 
 for arg in "$@"; do
     case $arg in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
         --non-interactive|-n)
             NON_INTERACTIVE=true
             ;;
