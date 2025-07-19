@@ -101,7 +101,7 @@ fi
 
 # Optionally install full package suite
 full_package_list="build-essential cmake clang \
-    tmux ranger neofetch git fzf net-tools htop wget curl zip unzip \
+    tmux ranger neofetch git fzf net-tools htop wget curl zip unzip silversearcher-ag\
     python3 python3-dev python-is-python3 python3-pip python3-venv lsb-release"
 
 echo
@@ -117,11 +117,50 @@ else
     echo "Skipping full package suite installation."
 fi
 
-# Install custom fzf key bindings if present
-if [ -f "$CONFIG_DIR/fzf.bash" ]; then
-    echo "Copying fzf.bash to /usr/share/doc/fzf/examples/key-bindings.bash (requires sudo)"
-    sudo cp "$CONFIG_DIR/fzf.bash" /usr/share/doc/fzf/examples/key-bindings.bash
-    echo "fzf.bash installed as key-bindings.bash"
+# Install custom fzf key bindings based on Ubuntu version
+if command -v lsb_release >/dev/null 2>&1; then
+    UBUNTU_VERSION=$(lsb_release -rs)
+    case "$UBUNTU_VERSION" in
+        22.04)
+            FZF_FILE="fzf.ubuntu22.bash"
+            ;;
+        24.04)
+            FZF_FILE="fzf.ubuntu24.bash"
+            ;;
+        *)
+            echo "Warning: Ubuntu version $UBUNTU_VERSION not explicitly supported"
+            # Try to determine which file to use based on major version
+            MAJOR_VERSION=$(echo "$UBUNTU_VERSION" | cut -d. -f1)
+            if [ "$MAJOR_VERSION" -ge 24 ]; then
+                FZF_FILE="fzf.ubuntu24.bash"
+            else
+                FZF_FILE="fzf.ubuntu22.bash"
+            fi
+            echo "Using $FZF_FILE based on major version"
+            ;;
+    esac
+    
+    if [ -f "$CONFIG_DIR/$FZF_FILE" ]; then
+        echo "Copying $FZF_FILE to /usr/share/doc/fzf/examples/key-bindings.bash (requires sudo)"
+        sudo cp "$CONFIG_DIR/$FZF_FILE" /usr/share/doc/fzf/examples/key-bindings.bash
+        echo "$FZF_FILE installed as key-bindings.bash"
+    else
+        echo "Warning: $FZF_FILE not found in $CONFIG_DIR"
+    fi
+else
+    echo "Warning: lsb_release not found, cannot determine Ubuntu version"
+    # Fallback: check if either file exists
+    if [ -f "$CONFIG_DIR/fzf.ubuntu24.bash" ]; then
+        echo "Using fzf.ubuntu24.bash as fallback"
+        sudo cp "$CONFIG_DIR/fzf.ubuntu24.bash" /usr/share/doc/fzf/examples/key-bindings.bash
+        echo "fzf.ubuntu24.bash installed as key-bindings.bash"
+    elif [ -f "$CONFIG_DIR/fzf.ubuntu22.bash" ]; then
+        echo "Using fzf.ubuntu22.bash as fallback"
+        sudo cp "$CONFIG_DIR/fzf.ubuntu22.bash" /usr/share/doc/fzf/examples/key-bindings.bash
+        echo "fzf.ubuntu22.bash installed as key-bindings.bash"
+    else
+        echo "Warning: No fzf configuration files found"
+    fi
 fi
 
 echo "Installation complete!"
