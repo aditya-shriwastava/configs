@@ -10,7 +10,7 @@ git_branch() {
 }
 
 # Function to show remote indicator
-# REMOTE=True
+REMOTE=True
 remote_indicator() {
     [[ "$REMOTE" == "True" ]] && echo "🌐 " || echo ""
 }
