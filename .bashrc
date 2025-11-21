@@ -10,7 +10,7 @@ git_branch() {
 }
 
 # Function to show remote indicator
-REMOTE=True
+REMOTE=False
 remote_indicator() {
     [[ "$REMOTE" == "True" ]] && echo "🌐 " || echo ""
 }
@@ -28,3 +28,27 @@ bind -m vi-insert "\C-l":clear-screen
 
 source /usr/share/doc/fzf/examples/key-bindings.bash
 export EDITOR=nvim
+
+journal() {
+    local today=$(date +%Y-%m-%d)
+    local journal_dir="$HOME/journal/$today"
+    local journal_file="$journal_dir/journal.md"
+
+    # Create directory if it doesn't exist
+    mkdir -p "$journal_dir"
+
+    # Create file if it doesn't exist
+    touch "$journal_file"
+
+    # Open with editor
+    if [ -n "$EDITOR" ]; then
+        "$EDITOR" "$journal_file"
+    elif command -v vim >/dev/null 2>&1; then
+        vim "$journal_file"
+    elif command -v nano >/dev/null 2>&1; then
+        nano "$journal_file"
+    else
+        vi "$journal_file"
+    fi
+}
+
